@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Square is a class in the style tag. When aplied to my table element it takes on these behaviors-->
+    <style>
+        .Square{
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            font-size: 30pt;
+            font-weight: bold;
+            font-family: cursive;
+            color: green
+        }
+    </style>
+    <script>
+//for loop iterates through box to clear them one by one. Thus creating a blank squares for a new game.
+        function startGame(){
+            
+            for (var i =1; i<=9; i = i + 1){
+                clearBox(i);
+            }
+//Prevents X or O from starting every single game. Calls built in function (Math.random) gives number between 0 and 1, and X or O is determined based on that randon number.         
+          document.turn = "X";
+            if (Math.random() < 0.5) {
+                document.turn = "0";
+            }
+               document.winner = null;
+            setMessage(document.turn + "   Gets To Start.");
+        }
+
+        function setMessage(msg){
+            document.getElementById("message").innerText = msg;
+
+        }
+// Stops user from using a square/space that prior player has already selected, and makes sure user cant select blank space after game is over. The message that is set states X or O has aleady won.
+        function nextMove(square){
+            if(document.winner != null) {
+              setMessage(document.winner + "already won the game")
+            }else if(square.innerText == "") {
+              square.innerText = document.turn;
+            switchTurn();
+        } else {
+            setMessage("Square is Used");
+        }
+    }
+// The switchTurnfunction allows user to "switch turns" back and forth between "X" and "O".
+            function switchTurn(){
+            if (checkForWinner(document.turn)) {
+                setMessage("Triumph" + document.turn + "! You Win!!!");
+                document.winner = document.turn;
+            } else if(document.turn == "X"){
+                document.turn = "O";
+                setMessage("It's" + document.turn + "'s turn!");
+            } else {
+                document.turn = "X";
+                setMessage("It's" + document.turn + "'s turn!");
+            }
+        }
+ // This function checks for winner by checking box id's within the table data.If there are three X's or O's that comprise one of the id patterns below a winner will be determined. Its checks every possible way a user can win.
+            function checkForWinner(move){
+                var result= false;
+                if (checkRow(1, 2, 3, move) || 
+                    checkRow(4, 5, 6, move) ||
+                    checkRow(7, 8, 9, move) ||
+                    checkRow(1, 4, 7, move) ||
+                    checkRow(2, 5, 8, move) ||
+                    checkRow(3, 6, 9, move) ||
+                    checkRow(1, 5, 9, move) ||
+                    checkRow(3, 5, 7, move)) {
+                    
+                    result = true;
+                    }
+                return result;
+                }
+        // Function created to be input into check winner function to search for winning combo. As seen right above.
+          function checkRow(a, b, c, move) {
+               var result = false;
+               if(getBox(a) == move && getBox(b) == move && getBox(c) == move) {
+                   result = true;
+               }
+                   return result;
+
+           }
+           function getBox(number) {
+               return document.getElementById("s" + number).innerText;
+          }
+           function clearBox(number) {
+               document.getElementById("s" + number).innerText = "";
+           }
+
+
+</script>
+</head>
+<!--The event here is onload. When the page loads the startGame function is called and games commmenses.-->
+<body onload="startGame();">
+    <h1>Here We Go...Tic Tac Toe!!!</h1>
+    
+    <div id="message">messages will go here</div>
+<!--This table is a representation of the tic-tac-toe squares. 
+The on click prompts the next move function, and when clicked by user an X or O will appear in the selected space in the table. -->
+    <!--border: is an attribute made 1 pixel wide to essentially create a border around the data within the table-->
+<table border="1">
+        <tr>
+            <td id="s1" class="Square" onclick="nextMove(this);"></td>
+            <td id="s2" class="Square" onclick="nextMove(this);"></td>
+            <td id="s3" class="Square" onclick="nextMove(this);"></td>
+        </tr>
+        <tr>
+            <td id="s4" class="Square" onclick="nextMove(this);"></td>
+            <td id="s5" class="Square" onclick="nextMove(this);"></td>
+            <td id="s6" class="Square" onclick="nextMove(this);"></td>
+        </tr>
+        <tr>
+            <td id="s7" class="Square" onclick="nextMove(this);"></td>
+            <td id="s8" class="Square" onclick="nextMove(this);"></td>
+            <td  id="s9" class="Square" onclick="nextMove(this);"></td>
+        </tr>
+    </table>
+    <a href="javascript:startGame();">START OVER</a>
+</body>
+</html>
